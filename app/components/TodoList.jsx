@@ -4,17 +4,21 @@ var Todo = require('Todo');
 var TodoList = React.createClass({
   render: function() {
     var {todos} = this.props;
-    var renderList = function() {
+    var renderTodos = () => {
+      if (todos.length === 0) {
+        return (
+          <p className="container__message">Nothing To Do</p>
+        );
+      }
       return todos.map((todo) => {
-        return <Todo key={todo.id} {...todo} />
+        return (
+          <Todo key={todo.id} {...todo} onToggle={this.props.onToogle}/>
+        )
       })
     }
     return (
       <div>
-        <h1>Lista</h1>
-        <ul>
-          {renderList()}
-        </ul>
+        {renderTodos()}
       </div>
     )
   }
