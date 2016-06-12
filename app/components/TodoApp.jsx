@@ -5,6 +5,7 @@ var moment = require('moment');
 var TodoAPI = require('TodoAPI');
 var TodoList = require('TodoList');
 var AddTodo = require('AddTodo');
+var TodoEdit = require('TodoEdit');
 var TodoSearch = require('TodoSearch');
 
 var TodoApp = React.createClass({
@@ -12,6 +13,8 @@ var TodoApp = React.createClass({
     return {
       showCompleted: false,
       searchText: '',
+      isEditing: false,
+      todoEditing: undefined,
       todos: TodoAPI.getTodos()
     };
   },
@@ -38,6 +41,13 @@ var TodoApp = React.createClass({
       searchText: searchText.toLowerCase()
     });
   },
+  handleDelete: function(id) {
+    console.log(id);
+    var updatedTodos = TodoAPI.deleteTodo(this.state.todos, id);
+    this.setState({
+      todos: updatedTodos
+    })
+  },
   handleToogle: function (id) {
     var updatedTodos = this.state.todos.filter((todo) => {
       if (todo.id === id) {
@@ -51,9 +61,41 @@ var TodoApp = React.createClass({
       todos: updatedTodos
     })
   },
+  handleUpdateTodo: function(todoToUpdate) {
+    var updatedTodos = this.state.todos.filter((todo) => {
+      if (todo.id === todoToUpdate.id) {
+          todo.text = todoToUpdate.text;
+      }
+      return todo;
+    });
+    this.setState({
+      todos: updatedTodos,
+      isEditing: false,
+      todoEditing: undefined
+
+    })
+  },
+  handleEdit: function(id) {
+    this.setState({
+      isEditing: true,
+      todoEditing: TodoAPI.editTodo(this.state.todos, id)
+    });
+    //console.log("Coninue editig: ", id);
+  },
   render: function () {
-    var {todos, showCompleted, searchText} = this.state;
+    var {todos, showCompleted, searchText, isEditing, todoEditing} = this.state;
     var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText);
+    var editContainer = isEditing ? "editing" : "notEditing";
+
+    var handle = this.handleUpdateTodo;
+
+    var renderEditing = function() {
+      if (isEditing) {
+        return (
+          <TodoEdit updateTodo={handle} todoToEdit={todoEditing} />
+        );
+      };
+    };
 
     return (
       <div>
@@ -62,9 +104,10 @@ var TodoApp = React.createClass({
           <div className="column small-centered small-11 medium-6 large-5">
             <div className="container">
               <TodoSearch onSearch={this.handleSearch}/>
-              <TodoList todos={filteredTodos} onToggle={this.handleToggle}/>
+              <TodoList onToogle={this.handleToogle} todos={filteredTodos} onDelete={this.handleDelete} onEdit={this.handleEdit}/>
               <AddTodo onAddTodo={this.handleAddTodo}/>
             </div>
+            {renderEditing()}
           </div>
         </div>
       </div>

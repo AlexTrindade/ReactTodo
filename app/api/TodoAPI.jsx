@@ -43,5 +43,18 @@ module.exports = {
     });
 
     return filteredTodos;
+  },
+  deleteTodo: function(todos, id) {
+    var updatedTodos = todos;
+    updatedTodos = updatedTodos.filter((todo) => {
+      return todo.id !== id;
+    })
+    return updatedTodos;
+  },
+  editTodo: function(todos, id) {
+    var todoToEdit = todos.find((todo) => {
+      return todo.id === id
+    });
+    return todoToEdit;
   }
 }

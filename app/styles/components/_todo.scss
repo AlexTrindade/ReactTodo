@@ -1,9 +1,20 @@
+.todoContainer {
+  //border: 1px solid red;
+  padding: 0;
+  display: inline-flex;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+}
+
 .todo {
   align-items: center;
   cursor: pointer;
   display: flex;
   padding: 1rem;
   transition: background .3s ease;
+  width: 70%;
+  padding-bottom: 5px;
+  //float: left;
 
   p, input {
     margin: 0;
