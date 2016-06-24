@@ -4,7 +4,6 @@ var TestUtils = require('react-addons-test-utils');
 var expect = require('expect');
 var $ = require('jquery');
 
-// var TodoSearch = require('TodoSearch');
 import {TodoSearch} from 'TodoSearch';
 
 describe('TodoSearch', () => {
@@ -27,7 +26,7 @@ describe('TodoSearch', () => {
     expect(spy).toHaveBeenCalledWith(action);
   });
 
-  it('should dispatch TOOGLE_SHOW_COMPLETED when checkbox checked', () => {
+  it('should dispatch TOGGLE_SHOW_COMPLETED when checkbox checked', () => {
     var action = {
       type: 'TOGGLE_SHOW_COMPLETED'
     };

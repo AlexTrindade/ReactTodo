@@ -8,19 +8,20 @@ var actions = require('actions');
 var store = require('configureStore').configure();
 var TodoAPI = require('TodoAPI');
 
-import './../playground/firebase/index';
 
-store.subscribe(() => {
-  var state = store.getState();
-  TodoAPI.setTodos(state.todos);
-});
-
-var initialTodos = TodoAPI.getTodos();
-store.dispatch(actions.addTodos(initialTodos));
+// store.subscribe(() => {
+//   var state = store.getState();
+//   TodoAPI.setTodos(state.todos);
+// });
+//
+// var initialTodos = TodoAPI.getTodos();
+// store.dispatch(actions.addTodos(initialTodos));
 
 // store.dispatch(actions.addTodo('Clean the yard'));
 // store.dispatch(actions.setSearchText('yard'));
 // store.dispatch(actions.toggleShowCompleted());
+
+store.dispatch(actions.startAddTodos());
 
 // Load foundation
 $(document).foundation();
