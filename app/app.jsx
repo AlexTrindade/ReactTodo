@@ -8,6 +8,8 @@ var actions = require('actions');
 var store = require('configureStore').configure();
 var TodoAPI = require('TodoAPI');
 
+import firebase, {firebaseRef} from 'app/firebase/';
+
 
 // store.subscribe(() => {
 //   var state = store.getState();
@@ -22,6 +24,21 @@ var TodoAPI = require('TodoAPI');
 // store.dispatch(actions.toggleShowCompleted());
 
 store.dispatch(actions.startAddTodos());
+
+var todosRef = firebaseRef.child('todos');
+
+todosRef.on('child_changed', (snapshot) => {
+  console.log('getState', store.getState().todos);
+  store.dispatch(actions.updateTodo(snapshot.key, snapshot.val()));
+});
+
+todosRef.on('child_removed', (snapshot) => {
+  store.dispatch(actions.removeTodo(snapshot.key));
+});
+
+// todosRef.on('child_added', (snapshot) => {
+//   store.dispatch(actions.addTodo(snapshot.val()));
+// });
 
 // Load foundation
 $(document).foundation();

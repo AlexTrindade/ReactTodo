@@ -42,6 +42,12 @@ export var todosReducer = (state = [], action) => {
         ...state,
         ...action.todos
       ];
+
+    case 'REMOVE_TODO':
+      var filteredTodos = state.filter((todo) => {
+        return todo.id !== action.id
+      });
+      return filteredTodos;
     default:
       return state;
   }

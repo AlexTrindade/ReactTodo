@@ -75,6 +75,13 @@ export var updateTodo = (id, updates) => {
   };
 };
 
+export var removeTodo = (id) => {
+  return {
+    type: 'REMOVE_TODO',
+    id
+  };
+};
+
 export var startToggleTodo = (id, completed) => {
   return (dispatch, getState) => {
     var todoRef = firebaseRef.child(`todos/${id}`);
