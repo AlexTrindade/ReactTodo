@@ -8,6 +8,8 @@ export var Login = React.createClass({
     dispatch(actions.startLogin());
   },
   render() {
+    //var {auth} = this.props;
+    //console.log('ID do usuário: ', auth.uid);
     return (
       <div>
         <h1 className="page-title">Todo App</h1>
@@ -25,4 +27,6 @@ export var Login = React.createClass({
   }
 });
 
-export default Redux.connect()(Login);
+export default Redux.connect((state) => {
+  return state;
+})(Login);

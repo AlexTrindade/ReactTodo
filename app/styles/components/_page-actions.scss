@@ -1,5 +1,15 @@
 .page-actions {
   display: flex;
   justify-content: flex-end;
-  padding: 1rem 2rem 0 0;
+  padding: 2rem;
+
+  .float-left {
+    display: flex;
+    justify-content: flex-start;
+    padding: 2rem;
+  }
+}
+
+.color-red {
+  color: red;
 }
