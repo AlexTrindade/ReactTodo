@@ -10,25 +10,27 @@ import router from 'app/router/';
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
+    store.dispatch(actions.login(user.uid));
+    store.dispatch(actions.startAddTodos());
     hashHistory.push('/todos');
+    observar(user.uid);
   } else {
+    store.dispatch(actions.logout());
     hashHistory.push('/');
   }
 });
 
-var todosRef = firebaseRef.child('todos');
+function observar(uid) {
+  var todosRef = firebaseRef.child('users/' + uid + '/todos');
 
-store.dispatch(actions.startAddTodos());
+  todosRef.on('child_changed', (snapshot) => {
+    store.dispatch(actions.updateTodo(snapshot.key, snapshot.val()));
+  });
 
-todosRef.on('child_changed', (snapshot) => {
-  console.log('getState', store.getState().todos);
-  store.dispatch(actions.updateTodo(snapshot.key, snapshot.val()));
-});
-
-todosRef.on('child_removed', (snapshot) => {
-  store.dispatch(actions.removeTodo(snapshot.key));
-});
-
+  todosRef.on('child_removed', (snapshot) => {
+    store.dispatch(actions.removeTodo(snapshot.key));
+  });
+};
 
 // Load foundation
 $(document).foundation();
