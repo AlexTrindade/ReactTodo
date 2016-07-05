@@ -1,7 +1,34 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var {Route, Router, IndexRoute, hashHistory} = require('react-router');
-var TodoApp = require('TodoApp');
+var {Provider} = require('react-redux');
+var {hashHistory} = require('react-router');
+
+var actions = require('actions');
+var store = require('configureStore').configure();
+import firebase, {firebaseRef} from 'app/firebase/';
+import router from 'app/router/';
+
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    hashHistory.push('/todos');
+  } else {
+    hashHistory.push('/');
+  }
+});
+
+var todosRef = firebaseRef.child('todos');
+
+store.dispatch(actions.startAddTodos());
+
+todosRef.on('child_changed', (snapshot) => {
+  console.log('getState', store.getState().todos);
+  store.dispatch(actions.updateTodo(snapshot.key, snapshot.val()));
+});
+
+todosRef.on('child_removed', (snapshot) => {
+  store.dispatch(actions.removeTodo(snapshot.key));
+});
+
 
 // Load foundation
 $(document).foundation();
@@ -10,6 +37,8 @@ $(document).foundation();
 require('style!css!sass!applicationStyles')
 
 ReactDOM.render(
-  <TodoApp />,
+  <Provider store={store}>
+    {router}
+  </Provider>,
   document.getElementById('app')
 );

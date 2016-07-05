@@ -1,69 +1,37 @@
-var React = require('react');
-var uuid = require('node-uuid');
-var moment = require('moment');
+import React from 'react';
+import * as Redux from 'react-redux';
 
-var TodoAPI = require('TodoAPI');
-var TodoList = require('TodoList');
-var AddTodo = require('AddTodo');
-var TodoSearch = require('TodoSearch');
+import TodoList from 'TodoList'
+import AddTodo from 'AddTodo';
+import TodoSearch from 'TodoSearch';
+import * as actions from 'actions';
+import firebase from 'app/firebase';
 
-var TodoApp = React.createClass({
-  getInitialState: function () {
-    return {
-      showCompleted: false,
-      searchText: '',
-      todos: TodoAPI.getTodos()
-    };
+export var TodoApp = React.createClass({
+  onLogout(e) {
+    var {dispatch} = this.props;
+    e.preventDefault();
+    dispatch(actions.startLogout());
   },
-  componentDidUpdate: function () {
-    TodoAPI.setTodos(this.state.todos);
-  },
-  handleAddTodo: function(text) {
-    this.setState({
-      todos: [
-        ...this.state.todos,
-        {
-          id: uuid(),
-          text: text,
-          completed: false,
-          createdAt: moment().unix(),
-          completedAt: undefined
-        }
-      ]
-    });
-  },
-  handleSearch: function(showCompleted, searchText) {
-    this.setState({
-      showCompleted: showCompleted,
-      searchText: searchText.toLowerCase()
-    });
-  },
-  handleToogle: function (id) {
-    var updatedTodos = this.state.todos.filter((todo) => {
-      if (todo.id === id) {
-          todo.completed = !todo.completed;
-          todo.completedAt = todo.completed ? moment().unix() : undefined;
-
-      }
-      return todo;
-    });
-    this.setState({
-      todos: updatedTodos
-    })
-  },
-  render: function () {
-    var {todos, showCompleted, searchText} = this.state;
-    var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText);
-
+  render() {
+    //var {auth} = this.props;
+    //console.log('ID do usuário: ', auth.uid);
     return (
       <div>
+        {/*<div className="page-actions float-left">
+          Welcome &nbsp; <span className="color-red">{firebase.auth().currentUser.providerData[0].displayName}</span>
+        </div>*/}
+        <div className="page-actions">
+          <a href="#" onClick={this.onLogout}>Logout</a>
+        </div>
         <h1 className="page-title">Todo App</h1>
+
         <div className="row">
           <div className="column small-centered small-11 medium-6 large-5">
             <div className="container">
-              <TodoSearch onSearch={this.handleSearch}/>
-              <TodoList todos={filteredTodos} onToggle={this.handleToggle}/>
-              <AddTodo onAddTodo={this.handleAddTodo}/>
+              <TodoSearch/>
+              <TodoList/>
+              <AddTodo/>
             </div>
           </div>
         </div>
@@ -72,4 +40,6 @@ var TodoApp = React.createClass({
   }
 });
 
-module.exports = TodoApp;
+export default Redux.connect((state) => {
+  return state;
+})(TodoApp);
