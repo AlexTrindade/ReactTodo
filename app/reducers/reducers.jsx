@@ -48,6 +48,8 @@ export var todosReducer = (state = [], action) => {
         return todo.id !== action.id
       });
       return filteredTodos;
+    case 'LOGOUT':
+      return [];
     default:
       return state;
   };
